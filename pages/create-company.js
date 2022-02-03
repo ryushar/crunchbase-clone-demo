@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Fragment, useState } from "react";
 
 import { TiDocumentText } from "react-icons/ti";
-import { MdLocationPin, MdAddCircleOutline, MdSave, MdCancel } from "react-icons/md";
+import { MdLocationPin, MdAddCircleOutline, MdSave } from "react-icons/md";
 
 import Card from "../components/common/Card";
 import Container from "../components/common/Container";
@@ -15,6 +15,8 @@ import Checkbox from "../components/common/form/Checkbox";
 import TextArea from "../components/common/form/TextArea";
 import ProfileImgPicker from "../components/create-company/ProfileImgPicker";
 import CreateAddress from "../components/create-company/CreateAddress";
+import Chip from "../components/create-company/Chip";
+import axios from "axios";
 
 function checkFormValidity(data) {
   const keys = Object.getOwnPropertyNames(data);
@@ -30,20 +32,21 @@ export default function CreateCompany() {
   });
 
   const [formData, setFormData] = useState({
-    name: { value: null, isValid: false },
-    description: { value: null, isValid: false },
-    also_known_as: { value: null, isValid: true },
-    legal_name: { value: null, isValid: true },
+    profile_image: { value: null, isValid: true },
+    name: { value: "", isValid: false },
+    description: { value: "", isValid: false },
+    also_known_as: { value: "", isValid: true },
+    legal_name: { value: "", isValid: true },
     founded_date: { value: null, isValid: true },
     is_closed: { value: false, isValid: true },
     closed_date: { value: null, isValid: true },
-    num_employees: { value: null, isValid: true },
-    company_type: { value: null, isValid: true },
-    website_url: { value: null, isValid: true },
-    linkedin_url: { value: null, isValid: true },
-    email: { value: null, isValid: true },
-    phone_no: { value: null, isValid: true },
-    full_description: { value: null, isValid: true },
+    num_employees: { value: "", isValid: true },
+    company_type: { value: "", isValid: true },
+    website_url: { value: "", isValid: true },
+    linkedin_url: { value: "", isValid: true },
+    email: { value: "", isValid: true },
+    phone_no: { value: "", isValid: true },
+    full_description: { value: "", isValid: true },
     headquarters: { value: null, isValid: true }
   });
 
@@ -51,7 +54,24 @@ export default function CreateCompany() {
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    console.log(event, formData, formIsValid);
+    const data = new FormData();
+    const keys = Object.getOwnPropertyNames(formData);
+    for (const key of keys) {
+      const { value } = formData[key];
+      if (value instanceof Blob) data.append(key, value);
+      else data.append(key, JSON.stringify(value));
+    }
+    axios
+      .post("/api/save", data, {
+        headers: { "Content-Type": "multipart/form-data" }
+      })
+      .then((res) => {
+        // window.location.pathname = "/";
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Failed to save.");
+      });
   };
 
   const head = (
@@ -68,7 +88,7 @@ export default function CreateCompany() {
     <Container className={state.addingAddress && "hidden"}>
       <form onSubmit={onFormSubmit}>
         <Card header={{ icon: <TiDocumentText />, iconBgColor: "bg-blue-500", text: "Overview" }}>
-          <ProfileImgPicker />
+          <ProfileImgPicker onChange={onInputChange} />
           <TextInput name="name" label="Name" required onChange={onInputChange} />
           <TextInput name="description" label="Description" required onChange={onInputChange} />
           <TextInput name="also_known_as" label="Also Known As" onChange={onInputChange} />
@@ -114,16 +134,14 @@ export default function CreateCompany() {
         </Card>
         <Card header={{ icon: <MdLocationPin />, iconBgColor: "bg-sky-500", text: "Headquarters" }}>
           {headquarters ? (
-            <span className="flex items-center w-max bg-gray-200 text-sm text-gray-500 px-2 py-2 rounded-md">
-              {headquarters.city}
-              {headquarters.address_name && ` (${headquarters.address_name})`}
-              <span
-                className="ml-1 text-lg cursor-pointer"
-                onClick={() => onInputChange({ headquarters: { value: null, isValid: true } })}
-              >
-                <MdCancel />
-              </span>
-            </span>
+            <Chip
+              text={
+                headquarters.address_name
+                  ? `${headquarters.city} (${headquarters.address_name})`
+                  : headquarters.city
+              }
+              onRemove={() => onInputChange({ headquarters: { value: null, isValid: true } })}
+            />
           ) : (
             <BaseButton
               icon={<MdAddCircleOutline />}
