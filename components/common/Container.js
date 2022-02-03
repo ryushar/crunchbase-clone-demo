@@ -1,7 +1,7 @@
-export default function Container({ children, style }) {
-  return (
-    <div className="w-full lg:w-8/12 mx-auto pt-16" style={style}>
-      {children}
-    </div>
-  );
+import classnames from "classnames";
+import { overrideTailwindClasses } from "tailwind-override";
+
+export default function Container({ children, className }) {
+  const classes = overrideTailwindClasses(classnames("w-full lg:w-8/12 mx-auto pt-16", className));
+  return <div className={classes}>{children}</div>;
 }
