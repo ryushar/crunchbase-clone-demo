@@ -13,6 +13,7 @@ import NumberInput from "../components/common/form/NumberInput";
 import DateInput from "../components/common/form/DateInput";
 import Checkbox from "../components/common/form/Checkbox";
 import TextArea from "../components/common/form/TextArea";
+import ProfileImgPicker from "../components/create-company/ProfileImgPicker";
 
 function checkFormValidity(data) {
   const keys = Object.getOwnPropertyNames(data);
@@ -59,6 +60,7 @@ export default function CreateCompany() {
     <Container>
       <form onSubmit={onFormSubmit}>
         <Card header={{ icon: <TiDocumentText />, iconBgColor: "bg-blue-500", text: "Overview" }}>
+          <ProfileImgPicker />
           <TextInput name="name" label="Name" required onChange={onInputChange} />
           <TextInput name="description" label="Description" required onChange={onInputChange} />
           <TextInput name="also_known_as" label="Also Known As" onChange={onInputChange} />
