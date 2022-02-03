@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import BaseButton from "../common/BaseButton";
 
-export default function DashboardButton({ text, icon, disabled, onClick }) {
+export default function DashboardButton({ text, icon, onClick }) {
   return (
     <BaseButton
       text={text}

@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import { overrideTailwindClasses } from "tailwind-override";
 
-export default function BaseButton({ text, icon, className, isLight, disabled, onClick }) {
+export default function BaseButton({ type, text, icon, className, isLight, disabled, onClick }) {
   const classes = overrideTailwindClasses(
     classnames([
       "flex items-center px-2.5 py-1.5 bg-gray-400 text-white rounded-md font-medium text-sm uppercase relative shadow-md",
@@ -11,7 +11,7 @@ export default function BaseButton({ text, icon, className, isLight, disabled, o
   );
 
   return (
-    <a className={classes} onClick={onClick}>
+    <button type={type || "button"} className={classes} onClick={onClick}>
       {icon && <span className="mr-2 text-xl">{icon}</span>}
       {text}
       <div
@@ -23,6 +23,6 @@ export default function BaseButton({ text, icon, className, isLight, disabled, o
               : "bg-white hover:opacity-20 active:opacity-0")
         )}
       ></div>
-    </a>
+    </button>
   );
 }
