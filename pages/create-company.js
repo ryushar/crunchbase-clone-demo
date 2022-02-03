@@ -7,12 +7,12 @@ import { MdLocationPin, MdAddCircleOutline } from "react-icons/md";
 import Card from "../components/common/Card";
 import Container from "../components/common/Container";
 import BaseButton from "../components/common/BaseButton";
-import TextInput from "../components/form/TextInput";
-import SelectBox from "../components/form/SelectBox";
-import NumberInput from "../components/form/NumberInput";
-import DateInput from "../components/form/DateInput";
-import Checkbox from "../components/form/Checkbox";
-import TextArea from "../components/form/TextArea";
+import TextInput from "../components/common/form/TextInput";
+import SelectBox from "../components/common/form/SelectBox";
+import NumberInput from "../components/common/form/NumberInput";
+import DateInput from "../components/common/form/DateInput";
+import Checkbox from "../components/common/form/Checkbox";
+import TextArea from "../components/common/form/TextArea";
 
 function checkFormValidity(data) {
   const keys = Object.getOwnPropertyNames(data);
