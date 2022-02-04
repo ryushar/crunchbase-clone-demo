@@ -67,7 +67,6 @@ export default function CreateCompany() {
           isValid: true
         };
       }
-      console.log(newFormData);
       setFormData((old) => ({ ...old, ...newFormData }));
     });
     req.catch((error) => {

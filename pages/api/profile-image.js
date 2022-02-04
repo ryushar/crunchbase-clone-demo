@@ -22,13 +22,14 @@ export default async function handler(req, res) {
         }
       );
     });
+
     if (result.length === 1) {
       const buffer = result[0].profile_image;
       const mimetype = result[0].profile_image_mimetype;
       res.setHeader("Content-Type", mimetype);
       res.send(buffer);
     } else {
-      res.status(404).send();
+      res.status(204).send();
     }
   } catch (error) {
     console.error(error);
