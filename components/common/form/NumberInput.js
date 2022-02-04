@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function NumberInput({ name, label, min, max, required, onChange }) {
+export default function NumberInput({ name, label, min, max, required, onChange, value }) {
   const [state, setState] = useState({
     value: "",
     isValid: !required,
@@ -30,6 +30,7 @@ export default function NumberInput({ name, label, min, max, required, onChange 
         max={max}
         className={`mt-0 block w-full px-0.5 py-1 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-blue-500`}
         onChange={_onChange}
+        defaultValue={value}
       />
       {!state.isPristine && !state.isValid && (
         <div className="text-red-400 text-sm mt-1">This value is invalid.</div>

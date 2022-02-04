@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NumberInput from "./NumberInput";
 import SelectBox from "./SelectBox";
 
 const MONTHS = [{ value: "", label: "" }].concat(
   "January February March April May June July August September October November December"
     .split(" ")
-    .map((item, index) => ({ value: index + 1, label: item }))
+    .map((item, index) => ({ value: `${index + 1}`, label: item }))
 );
 
 const DAYS = [{ value: "", label: "" }].concat(
@@ -13,9 +13,10 @@ const DAYS = [{ value: "", label: "" }].concat(
 );
 
 function createDateString(year, month, day) {
-  month = month.padStart(2, "0");
-  day = day.padStart(2, "0");
-  return `${month}-${day}-${year}`;
+  year = year.toString().padStart(4, "0");
+  month = month.toString().padStart(2, "0");
+  day = day.toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function checkDateString(date) {
@@ -32,21 +33,28 @@ function getDayCount(year, month) {
   return 32;
 }
 
-export default function DateInput({ name, label, required, onChange }) {
-  const [date, setDate] = useState({
-    year: "",
-    month: "",
-    day: ""
-  });
+export default function DateInput({ name, label, required, onChange, value }) {
+  const [date, setDate] = useState({ year: "", month: "", day: "" });
+
+  useEffect(() => {
+    setDate({
+      year: value ? +value.substr(0, 4) : "",
+      month: value ? +value.substr(5, 2) : "",
+      day: value ? +value.substr(8, 2) : ""
+    });
+  }, [value]);
 
   const [state, setState] = useState({
-    value: "",
+    value: value || "",
     isValid: !required,
     isPristine: true
   });
 
-  const _onChange = (value) => {
-    const newDate = { ...date, ...value };
+  const _onChange = (newData) => {
+    const key = Object.keys(newData)[0];
+    newData[key] = parseInt(newData[key]);
+    console.log(newData[key]);
+    const newDate = { ...date, ...newData };
     const dateString = createDateString(newDate.year, newDate.month, newDate.day);
     const isEmpty = !newDate.year && !newDate.month && !newDate.day;
     const isValid = (!required && isEmpty) || checkDateString(dateString);
@@ -70,18 +78,21 @@ export default function DateInput({ name, label, required, onChange }) {
           min={1600}
           max={2100}
           onChange={(state) => _onChange({ year: state.year.value })}
+          value={date.year}
         />
         <SelectBox
           name="month"
           label="Month"
           values={MONTHS}
           onChange={(state) => _onChange({ month: state.month.value })}
+          value={date.month}
         ></SelectBox>
         <SelectBox
           name="day"
           label="Day"
           values={DAYS.slice(0, dayCount)}
           onChange={(state) => _onChange({ day: state.day.value })}
+          value={date.day}
         ></SelectBox>
       </div>
       {!state.isPristine && !state.isValid && (

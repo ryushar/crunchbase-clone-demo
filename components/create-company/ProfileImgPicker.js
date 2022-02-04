@@ -1,5 +1,6 @@
 import { BsFillFileImageFill } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ProfileImgPicker({ onChange }) {
   const [state, setState] = useState({
@@ -7,6 +8,24 @@ export default function ProfileImgPicker({ onChange }) {
     isValid: true,
     isPristine: true
   });
+
+  useEffect(() => {
+    const url = "/api/profile-image";
+    const req = axios.get(url, { responseType: "arraybuffer" });
+    req.then((res) => {
+      const buffer = res.data;
+      const mimetype = res.headers["content-type"];
+      if (buffer.byteLength > 0) {
+        const file = new File([buffer], "profile-image", { type: mimetype });
+        setState({ value: file, isValid: true, isPristine: false });
+        if (onChange) onChange({ profile_image: { value: file, isValid: true } });
+      }
+    });
+    req.catch((error) => {
+      console.error(error);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const _onChange = (event) => {
     if (event.target.files.length > 0) {

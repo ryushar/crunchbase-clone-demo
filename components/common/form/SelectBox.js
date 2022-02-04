@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function SelectBox({ name, label, values, required, onChange, disabled }) {
+export default function SelectBox({ name, label, values, required, onChange, disabled, value }) {
   values = values || [];
 
   const [state, setState] = useState({
@@ -26,8 +26,8 @@ export default function SelectBox({ name, label, values, required, onChange, dis
         name={name}
         className={`mt-0 block w-full px-0.5 py-1 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-blue-500`}
         onChange={_onChange}
-        defaultValue=""
         disabled={disabled}
+        value={value}
       >
         <option value="" hidden></option>
         {values.map((item) => (

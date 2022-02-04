@@ -10,9 +10,7 @@ const pool = mysql.createPool({
   database: "mydb"
 });
 
-export const config = {
-  api: { bodyParser: false }
-};
+export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
   const ip = req.connection.remoteAddress;
@@ -27,9 +25,7 @@ export default async function handler(req, res) {
     });
 
     const parsed = {};
-    for (const key of Object.getOwnPropertyNames(fields)) {
-      parsed[key] = JSON.parse(fields[key]);
-    }
+    Object.getOwnPropertyNames(fields).forEach((key) => (parsed[key] = JSON.parse(fields[key])));
 
     const imagePath = files.profile_image && files.profile_image.filepath;
     const image = imagePath ? await readFile(imagePath) : null;
@@ -54,32 +50,29 @@ export default async function handler(req, res) {
       address_line_2: (parsed.headquarters && parsed.headquarters.address_line_2) || "",
       postal_code: (parsed.headquarters && parsed.headquarters.postal_code) || "",
       city: (parsed.headquarters && parsed.headquarters.city) || "",
-      profile_image: image
+      profile_image: image,
+      profile_image_mimetype: image ? files.profile_image.mimetype : ""
     };
 
     const query = [ip];
-    for (const key of Object.getOwnPropertyNames(values)) {
-      query.push(values[key]);
-    }
+    Object.getOwnPropertyNames(values).forEach((key) => query.push(values[key]));
     query.push(values);
 
     await new Promise((resolve, reject) => {
       pool.query(
-        "INSERT INTO crunchbase_demo VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE ?",
+        "INSERT INTO crunchbase_demo VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE ?",
         query,
         (error) => {
-          if (error) {
-            console.log(error);
-            reject(error);
-          } else resolve();
+          if (error) reject(error);
+          else resolve();
         }
       );
     });
 
     if (imagePath) unlink(imagePath);
-
     res.status(204).send();
-  } catch {
+  } catch (error) {
+    console.error(error);
     res.status(500).send();
   }
 }

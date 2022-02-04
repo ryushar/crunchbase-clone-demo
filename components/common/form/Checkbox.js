@@ -1,4 +1,4 @@
-export default function Checkbox({ name, label, required, onChange }) {
+export default function Checkbox({ name, label, required, onChange, value }) {
   const _onChange = (event) => {
     const { checked: value } = event.target;
     const isValid = !required || value;
@@ -15,7 +15,8 @@ export default function Checkbox({ name, label, required, onChange }) {
         name={name}
         type="checkbox"
         className="border-gray-300 border-2 text-blue-500 focus:border-blue-500 focus:ring-blue-200 ml-2"
-        onChange={_onChange}
+        onClick={_onChange}
+        defaultChecked={value}
       />
     </label>
   );

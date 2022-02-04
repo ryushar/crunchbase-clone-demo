@@ -4,7 +4,7 @@ function defaultValidator(value) {
   return value.length > 0;
 }
 
-export default function TextArea({ name, label, required, validator, onChange }) {
+export default function TextArea({ name, label, required, validator, onChange, value }) {
   validator = validator || defaultValidator;
 
   const [state, setState] = useState({
@@ -31,6 +31,7 @@ export default function TextArea({ name, label, required, validator, onChange })
         className="mt-0 block w-full px-0.5 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-blue-500"
         rows="2"
         onChange={_onChange}
+        defaultValue={value}
       />
       {!state.isPristine && !state.isValid && (
         <div className="text-red-400 text-sm mt-1">This value is invalid.</div>

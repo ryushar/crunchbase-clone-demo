@@ -20,7 +20,7 @@ function CardHeader({ icon, iconBgColor, text }) {
 }
 
 export default function Card({ children, className, header }) {
-  const classes = overrideTailwindClasses(classnames(["p-6", className]));
+  const classes = overrideTailwindClasses(classnames(["p-6 sm:p-10", className]));
   return (
     <div className="w-full bg-white shadow-md rounded-md mb-8">
       {header && <CardHeader {...header} />}
