@@ -90,8 +90,8 @@ export default function CreateCompany() {
       .post("/api/save", data, {
         headers: { "Content-Type": "multipart/form-data" }
       })
-      .then((res) => {
-        // window.location.pathname = "/";
+      .then((_res) => {
+        window.location.pathname = "/";
       })
       .catch((error) => {
         console.error(error);
